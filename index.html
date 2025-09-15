@@ -124,24 +124,51 @@
         </section>
 
         <section id="monitoreo-section" class="d-none">
-            <h2 class="mb-4">Monitoreo en Tiempo Real 📈</h2>
-            <div id="monitoreo-cards" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
+            <div class="container">
+                <div class="card">
+                    <div class="header">
+                        <h1>☕ Taza de Café Interactiva</h1>
+                        <p>Ajusta el porcentaje de leche y observa cómo se llena tu taza</p>
+                    </div>
+                    
+                    <div class="content">
+                        <div class="coffee-cup-container">
+                            <div class="coffee-cup">
+                                <div class="cup-body">
+                                    <div class="liquid" id="liquid"></div> 
+                                    <div class="surface-waves"></div>
+                                </div>
+                                <div class="cup-handle"></div>
+                                <div class="steam">
+                                    <div class="steam-line"></div>
+                                    <div class="steam-line"></div>
+                                    <div class="steam-line"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="controls">
+                            <div class="slider-container">
+                                <div class="slider-header">
+                                    <label>Porcentaje de Leche</label>
+                                    <span id="percentage-display">25%</span> 
+                                </div>
+                                <input type="range" id="milk-slider" min="0" max="100" value="25" class="slider">
+                                <div class="slider-labels">
+                                    <span>0% (Solo café)</span>
+                                    <span>100% (Solo leche)</span>
+                                </div>
+                            </div>
+                            <div class="preset-buttons">
+                                <button class="preset-btn" data-value="0">0%</button>
+                                <button class="preset-btn" data-value="25">25%</button>
+                                <button class="preset-btn" data-value="50">50%</button>
+                                <button class="preset-btn" data-value="75">75%</button>
+                                <button class="preset-btn" data-value="100">100%</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            <h3 class="mt-5">Últimos Registros</h3>
-            <div class="table-responsive">
-                <table class="table table-striped table-hover mt-3" id="history-table">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Estado</th>
-                            <th>Tipo Actual</th>
-                            <th>Última Selección</th>
-                            <th>Fecha/Hora</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </div>
         </section>
     </div>

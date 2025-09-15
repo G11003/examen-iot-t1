@@ -12,10 +12,7 @@ function initHistorial() {
 
 async function fetchAndRenderHistorial() {
     const tableBody = document.querySelector('#historial-table tbody');
-    if (!tableBody) {
-        console.error("No se encontró el cuerpo de la tabla de historial.");
-        return;
-    }
+    if (!tableBody) return;
     try {
         const response = await fetch(MOCKAPI_URL);
         const devices = await response.json();
@@ -46,10 +43,7 @@ function initControl() {
 
 async function fetchAndRenderControlCard() {
     const controlCardContainer = document.getElementById('control-card');
-    if (!controlCardContainer) {
-        console.error("No se encontró el contenedor de la tarjeta de control.");
-        return;
-    }
+    if (!controlCardContainer) return;
     try {
         const response = await fetch(MOCKAPI_URL);
         const devices = await response.json();
@@ -157,7 +151,7 @@ function addControlListeners(deviceId) {
     });
 }
 
-// --- Funciones de Taza de Leche ---
+// --- Funciones de Taza de Leche (para la guía visual) ---
 function initTaza() {
     const tazaCafeName = document.getElementById('taza-cafe-name');
     const tazaCoffeeFill = document.getElementById('taza-coffee-fill');
@@ -295,62 +289,59 @@ async function fetchCapsulas() {
     loadCapsulas();
 }
 
-// --- Funciones de Monitoreo ---
-function startMonitoreo() {
-    fetchAndRenderMonitoreo();
-    monitoreoInterval = setInterval(fetchAndRenderMonitoreo, 2000);
+// --- Lógica para la Taza Interactiva (Nueva función para el Monitoreo) ---
+function initMonitoreo() {
+    new CoffeeCup();
 }
 
-function stopMonitoreo() {
-    clearInterval(monitoreoInterval);
-}
-
-async function fetchAndRenderMonitoreo() {
-    const monitoreoCardsContainer = document.getElementById('monitoreo-cards');
-    const historyTableBody = document.querySelector('#history-table tbody');
-    if (!monitoreoCardsContainer || !historyTableBody) {
-        console.error("No se encontraron los elementos de la sección de monitoreo.");
-        return;
+class CoffeeCup {
+    constructor() {
+        this.liquidElement = document.getElementById("liquid");
+        this.percentageDisplay = document.getElementById("percentage-display");
+        this.slider = document.getElementById("milk-slider");
+        this.presetButtons = document.querySelectorAll(".preset-btn");
+        this.init();
     }
-    
-    try {
-        const response = await fetch(MOCKAPI_URL);
-        const devices = await response.json();
-        monitoreoCardsContainer.innerHTML = '';
-        devices.forEach(device => {
-            const card = document.createElement('div');
-            card.className = 'col';
-            card.innerHTML = `
-                <div class="card h-100 shadow-sm p-3 ${device.status === 'prendido' ? 'status-on' : 'status-off'}">
-                    <div class="card-body">
-                        <h5 class="card-title">${device.name}</h5>
-                        <p class="card-text mb-1"><strong>Estado:</strong> <span class="badge ${device.status === 'prendido' ? 'bg-success' : 'bg-danger'}">${device.status.toUpperCase()}</span></p>
-                        <p class="card-text mb-1"><strong>Tipo Actual:</strong> ${device.tipo}</p>
-                        <p class="card-text mb-1"><strong>Última Selección:</strong> ${device.lasttemp}</p>
-                        <p class="card-text mb-1"><strong>Tamaño:</strong> ${device.tamano}</p>
-                    </div>
-                </div>
-            `;
-            monitoreoCardsContainer.appendChild(card);
+
+    init() {
+        if (!this.liquidElement || !this.slider) return;
+
+        this.slider.addEventListener("input", (e) => {
+            this.updateCoffee(Number.parseInt(e.target.value));
         });
 
-        // La siguiente parte genera el error si no hay registros o si la estructura cambia
-        // He comentado este bloque para evitar errores con estructuras de datos cambiantes
-        // historyTableBody.innerHTML = '';
-        // historyData.slice().reverse().forEach(record => {
-        //     const row = document.createElement('tr');
-        //     row.innerHTML = `
-        //         <td>${record.id}</td>
-        //         <td>${record.name}</td>
-        //         <td><span class="badge ${record.status === 'prendido' ? 'bg-success' : 'bg-danger'}">${record.status}</span></td>
-        //         <td>${record.tipo}</td>
-        //         <td>${record.lasttemp}</td>
-        //         <td>${record.timestamp}</td>
-        //     `;
-        //     historyTableBody.appendChild(row);
-        // });
-    } catch (error) {
-        console.error("Error al cargar los datos de monitoreo:", error);
+        this.presetButtons.forEach((button) => {
+            button.addEventListener("click", (e) => {
+                const value = Number.parseInt(e.target.dataset.value);
+                this.slider.value = value;
+                this.updateCoffee(value);
+            });
+        });
+
+        this.updateCoffee(Number.parseInt(this.slider.value));
+    }
+
+    updateCoffee(percentage) {
+        this.percentageDisplay.textContent = `${percentage}%`;
+        const liquidHeight = Math.max(10, percentage);
+        const color = this.calculateColor(percentage);
+        this.liquidElement.style.height = `${liquidHeight}%`;
+        this.liquidElement.style.background = color;
+        this.liquidElement.style.transition = "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
+    }
+
+    calculateColor(percentage) {
+        const colors = {
+            coffee: { r: 139, g: 69, b: 19 },
+            milk: { r: 245, g: 222, b: 179 },
+        };
+        const ratio = percentage / 100;
+        const r = Math.round(colors.coffee.r + (colors.milk.r - colors.coffee.r) * ratio);
+        const g = Math.round(colors.coffee.g + (colors.milk.g - colors.coffee.g) * ratio);
+        const b = Math.round(colors.coffee.b + (colors.milk.b - colors.coffee.b) * ratio);
+        const lightColor = `rgb(${Math.min(255, r + 20)}, ${Math.min(255, g + 20)}, ${Math.min(255, b + 20)})`;
+        const darkColor = `rgb(${Math.max(0, r - 20)}, ${Math.max(0, g - 20)}, ${Math.max(0, b - 20)})`;
+        return `linear-gradient(145deg, ${lightColor} 0%, rgb(${r}, ${g}, ${b}) 50%, ${darkColor} 100%)`;
     }
 }
 
@@ -376,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'control': initControl,
         'taza': initTaza,
         'capsulas': initCapsulas,
-        'monitoreo': startMonitoreo
+        'monitoreo': initMonitoreo
     };
 
     function showSection(sectionName) {
@@ -398,12 +389,10 @@ document.addEventListener('DOMContentLoaded', () => {
             navLinks[sectionName].classList.add('active');
         }
 
-        // Llamar a la función de inicialización correspondiente
         if (initFunctions[sectionName]) {
             initFunctions[sectionName]();
         }
 
-        // Detener el monitoreo si no estamos en la sección de monitoreo
         if (sectionName !== 'monitoreo') {
             stopMonitoreo();
         }
