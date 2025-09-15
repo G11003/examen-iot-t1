@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Coffee - Smart Brewer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" href="https://img.icons8.com/plasticine/100/coffee-maker.png" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="https://img.icons8.com/plasticine/100/coffee-maker.png" alt="Logo Cafetera" width="30" height="30" class="d-inline-block align-text-top">
+                IoT Coffee
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#historial" id="nav-historial">Historial de Cafés</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#control" id="nav-control">Control</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#capsulas" id="nav-capsulas">Administración de Cápsulas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#monitoreo" id="nav-monitoreo">Monitoreo</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <section id="historial-section">
+            <h2 class="mb-4">Historial de Cafés 📋</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mt-4" id="historial-table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>IP</th>
+                            <th>Nombre</th>
+                            <th>Estado</th>
+                            <th>Tipo</th>
+                            <th>Tamaño</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="control-section" class="d-none">
+            <h2 class="mb-4">Control de Cafetera Principal 🎮</h2>
+            <div id="control-card" class="card mx-auto shadow-sm p-3" style="max-width: 450px;">
+                </div>
+        </section>
+        
+        <section id="taza-section" class="d-none">
+            <h2 class="mb-4">Guía de Leche 🥛</h2>
+            <div class="card p-4 mx-auto shadow-sm" style="max-width: 300px;">
+                <div class="card-body text-center">
+                    <h5 class="card-title" id="taza-cafe-name"></h5>
+                    <div class="milk-guide-container mt-4">
+                        <div class="coffee-fill" id="taza-coffee-fill"></div>
+                        <div class="milk-fill" id="taza-milk-fill"></div>
+                        <div class="milk-text" id="taza-milk-text"></div>
+                    </div>
+                    <button class="btn btn-secondary mt-4" id="back-to-control-btn">Volver</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="capsulas-section" class="d-none">
+            <h2 class="mb-4">Administración de Cápsulas 🛠️</h2>
+            <form id="capsula-form" class="mb-4 p-4 border rounded shadow-sm bg-light">
+                <input type="hidden" id="capsula-id">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="capsula-name" class="form-label">Nombre de la Cápsula</label>
+                        <input type="text" class="form-control" id="capsula-name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="capsula-tipo" class="form-label">Tipo de Café</label>
+                        <select id="capsula-tipo" class="form-select">
+                            <option value="caliente" selected>Caliente</option>
+                            <option value="frio">Frío</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="capsula-tamano" class="form-label">Tamaño</label>
+                        <select id="capsula-tamano" class="form-select">
+                            <option value="estandar" selected>Estándar</option>
+                            <option value="grande">Grande</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary me-2">Guardar Cápsula</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-edit">Cancelar</button>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mt-4" id="capsulas-table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Tamaño</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="monitoreo-section" class="d-none">
+            <h2 class="mb-4">Monitoreo en Tiempo Real 📈</h2>
+            <div id="monitoreo-cards" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
+                </div>
+            <h3 class="mt-5">Últimos Registros</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mt-3" id="history-table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Estado</th>
+                            <th>Tipo Actual</th>
+                            <th>Última Selección</th>
+                            <th>Fecha/Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2023 IoT Coffee. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
