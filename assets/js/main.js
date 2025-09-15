@@ -5,6 +5,16 @@ const historyData = [];
 const HISTORY_LIMIT = 10;
 let selectedCapsuleName = "";
 
+// --- Funciones de control de monitoreo (Movidas al ámbito global) ---
+function startMonitoreo() {
+    fetchAndRenderMonitoreo();
+    monitoreoInterval = setInterval(fetchAndRenderMonitoreo, 2000);
+}
+
+function stopMonitoreo() {
+    clearInterval(monitoreoInterval);
+}
+
 // --- Funciones de Historial ---
 function initHistorial() {
     fetchAndRenderHistorial();
